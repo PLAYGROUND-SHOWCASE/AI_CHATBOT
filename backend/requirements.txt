@@ -1,0 +1,34 @@
+# ZARVIS Backend Dependencies
+# Tested with Python 3.13 on Windows
+# Note: Use Python 3.11-3.13; Python 3.14 lacks pre-built wheels for pydantic-core
+
+fastapi>=0.115.0
+uvicorn[standard]
+websockets
+
+# Config & validation
+python-dotenv
+pydantic>=2.9.0
+pydantic-settings>=2.5.0
+
+# Database
+sqlalchemy
+aiosqlite           # SQLite for dev (zero setup)
+# asyncpg           # PostgreSQL for prod (needs Rust on Py3.13+, use Docker)
+
+# Auth
+python-jose[cryptography]
+passlib[bcrypt]
+
+# HTTP & file handling
+python-multipart
+aiofiles
+httpx
+aiohttp
+
+# Google Gemini AI
+google-generativeai
+
+# Testing
+pytest
+pytest-asyncio
