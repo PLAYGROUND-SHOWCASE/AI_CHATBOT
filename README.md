@@ -103,6 +103,69 @@
 
 ---
 
+## 🔄 End-to-End Project & Interface Workflow
+
+### 1. 🖥️ User Interface Navigation & State Workflow
+```mermaid
+flowchart TD
+    Boot["⚡ 01. System Boot & Diagnostic Sequence\n(AI Core, Voice Engine, Memory, Tools, Gemini)"] --> Landing["🌐 02. Futuristic Landing Portal\n(Feature Overview & Quick Launch)"]
+    Landing -->|Sign In / Register| Auth["🔐 03. Commander Auth Gateway\n(JWT Authentication / Demo Bypass)"]
+    Landing -->|1-Click Demo| HUD["◉ 04. ZARVIS Command Center HUD"]
+    Auth -->|Authenticated JWT| HUD
+
+    HUD --> Voice["🎙️ 05. Voice Waveform Pipeline\n(Web Speech STT ➔ Gemini ➔ Neural TTS)"]
+    HUD --> ToolsChat["🛠️ 06. In-Chat Tool Execution\n(Weather, Calculator, Search, Telemetry)"]
+    HUD --> CmdPalette["⌘ 13. Command Palette (Ctrl + K)\n(Instant Global Actions & Navigation)"]
+
+    subgraph Navigation["🧭 Sidebar Modules & Control Views"]
+        Dashboard["📊 07. Telemetry Dashboard\n(Session Metrics & System Resource Bars)"]
+        Convos["💬 08. Conversations Manager\n(Searchable Multi-Session History)"]
+        Memory["🧠 09. Memory Matrix\n(Preferences, Projects & Personal Context)"]
+        ToolsReg["🔧 10. Modular Tools Registry\n(Active Tool Status & Schemas)"]
+        Vault["📁 11. Multimodal Knowledge Vault\n(PDF, DOCX, CSV, JSON & Image Analyzer)"]
+        Settings["⚙️ 12. System Settings\n(Model Selection, Temperature & Voice Tuning)"]
+    end
+
+    HUD --> Navigation
+```
+
+### 2. ⚡ Real-Time Voice, AI & Autonomous Tool Execution Pipeline
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User as 👤 Commander
+    participant UI as 🖥️ Frontend HUD (Canvas + Audio)
+    participant WS as 🔌 FastAPI WebSocket (/ws/zarvis)
+    participant Mem as 🧠 Memory & File Context (SQLAlchemy)
+    participant Tools as 🛠️ Modular Tool Registry
+    participant Gemini as 🤖 Google Gemini 1.5 Pro
+
+    User->>UI: Speaks via Mic (STT) or types message
+    UI->>WS: Event: user_message { text, personality, conversation_id }
+    WS-->>UI: Event: state { state: "processing" }
+    WS->>Mem: Retrieve user memories & conversation history
+    Mem-->>WS: Contextual prompt enrichment
+    WS->>Tools: Detect tool intent (Weather / Calc / Search / System / Time)
+    alt Tool Invocation Triggered
+        WS-->>UI: Event: state { state: "executing" }
+        WS-->>UI: Event: tool_start { tool, args }
+        Tools-->>WS: Structured JSON tool output
+        WS-->>UI: Event: tool_complete { tool, result }
+    end
+    WS-->>UI: Event: state { state: "thinking" }
+    WS->>Gemini: Stream prompt + memory context + tool output
+    loop Streaming Token Chunks
+        Gemini-->>WS: Token chunk
+        WS-->>UI: Event: assistant_chunk { text }
+    end
+    WS->>Mem: Persist assistant message & extract new facts
+    WS-->>UI: Event: assistant_done { text }
+    WS-->>UI: Event: state { state: "speaking" }
+    UI->>User: Renders Markdown response & plays Neural TTS waveform
+```
+
+---
+
 ## ✨ Key Features & Capabilities
 
 | Domain | Capabilities |
@@ -206,8 +269,8 @@ This automatically launches the FastAPI backend on `http://localhost:8000`, serv
 
 #### 1. Clone the Repository
 ```bash
-git clone https://github.com/PLAYGROUND-SHOWCASE/Demo_Zarvis.git
-cd Demo_Zarvis
+git clone https://github.com/PLAYGROUND-SHOWCASE/AI_CHATBOT.git
+cd AI_CHATBOT
 ```
 
 #### 2. Configure & Start Backend
